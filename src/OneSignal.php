@@ -143,36 +143,32 @@ class OneSignal {
         $subsIds=[]
     )
     {
-        \Illuminate\Support\Facades\Log::info('devadrian OSIds to send to: ' . json_encode($tenantIds));
+        \Illuminate\Support\Facades\Log::info('OneSignal Ids to send to: ' . json_encode($tenantIds));
 
         $params = [
-            'app_id'             => $this->appId,
+            'app_id' => $this->appId,
             //'include_player_ids' => $OneSignalIds,
             //'include_subscription_ids' => count($subsIds) > 0 ? $subsIds : [],
             'include_external_user_ids' => count($tenantIds) > 0 ? $tenantIds : [],
-            'large_icon'        => 'ic_stat_onesignal_default',
+            'large_icon' => 'ic_stat_onesignal_default',
             'include_aliases' => [
                 'external_id' => count($tenantIds) > 0 ? $tenantIds : [],
-                //    'onesignal_id' => $OneSignalIds,
-
+                // 'onesignal_id' => $OneSignalIds,
             ],
             "channel_for_external_user_ids" => "push",
             "target_channel" => "push",
-            'headings'           => $headings,
-            'contents'           => $contents,
-            /*
-                "alert": {
-    "title": "Beautiful View",
-    "subtitle": "",
-    "body" : "Denali, Alaska",
-},
-"mutable-content": 1
-                */
+            'headings' => $headings,
+            'contents' => $contents,
+            // "alert": {
+            //     "title": "Beautiful View",
+            //     "subtitle": "",
+            //     "body" : "Denali, Alaska",
+            // },
+            // "mutable-content": 1
             "alert" => [
                 "title" => $headings,
                 "subtitle" => "",
                 "body" => $contents,
-
             ],
             "mutable_content" => 1,
         ];
@@ -191,17 +187,20 @@ class OneSignal {
         {
             $params['buttons'] = $buttons;
         }
-        if(app()->environment('local') && false){
+
+        if (app()->environment('local') && false)
+        {
             Log::debug('local enviroment, dont send messages', [
                 'params' => $params,
                 'onesignalIds' => $OneSignalIds,
                 'tenantIds' => $tenantIds,
                 'subsIds' => $subsIds
             ]);
+
             return;
         }
-        //return;
-        Log::debug('Onesignal response params: ' , [json_encode($params)]);
+
+        Log::debug('OneSignal response params: ' , [json_encode($params)]);
         return $this->post($params, 'notifications', $this->Authorization);
     }
 
@@ -241,7 +240,6 @@ class OneSignal {
         $appId = $appId == null ? $this->appId : $appId;
 
         return $this->get('apps/' . $appId, $this->Authorization);
-
     }
 
 
@@ -363,8 +361,7 @@ class OneSignal {
                 'status_code' => $response->getStatusCode(),
             ];
         }
-        catch ( ClientException $e )
-        {
+        catch (ClientException $e) {
             throw new FailedToSendNotificationException('Failed to send notification .', 0, $e);
         }
     }
@@ -378,26 +375,19 @@ class OneSignal {
      */
     public function delete($Notification_id, $action)
     {
-        try
-        {
+        try {
             return json_decode($this->client->delete($this->Url . $action . '/' . $Notification_id . '?app_id=' . $this->appId,
                 [
                     'headers' => [
-                        'Content-Type'  => 'application/json',
+                        'Content-Type' => 'application/json',
                         'Authorization' => $this->API_KEY,
                     ],
                 ])->getBody()->getContents());
         }
-        catch ( ClientException $e )
-        {
-            throw new FailedToSendNotificationException(
-                'Failed to delete notification: ' . $Notification_id . ' .',
-                0,
-                $e
-            );
+        catch (ClientException $e) {
+            throw new FailedToSendNotificationException('Failed to delete notification: ' . $Notification_id . ' .', 0, $e);
         }
     }
-
 
     /**
      * @param $action
