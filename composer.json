@@ -1,0 +1,23 @@
+{
+    "name": "webident/laravel-onesignal",
+    "description": "A Onesignal package for Laravel 5.2 or higher",
+    "type": "package",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Webident",
+            "email": "mihai.tatomir@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.5.0",
+        "illuminate/support": "~5.1",
+        "guzzlehttp/guzzle": "~5.3|~6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Webident\\OneSignal\\": "src/"
+        }
+    }
+}
